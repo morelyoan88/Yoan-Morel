@@ -5,10 +5,13 @@ export enum QuizCategory {
   WINE = 'WINE'
 }
 
+export type Language = 'ES' | 'EN';
+
 export interface QuizMessage {
   role: 'professor' | 'user';
   content: string;
   isCorrect?: boolean;
+  imageUrl?: string;
 }
 
 export interface QuizState {
