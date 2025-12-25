@@ -1,0 +1,7 @@
+{
+  "name": "CVI.CHE 105 Training Academy",
+  "description": "An interactive study platform for CVI.CHE 105 staff to master the food, drinks, and wine manuals through AI-powered manager-style quizzing.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
