@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
-import Header from './components/Header.tsx';
-import QuizProfessor from './components/QuizProfessor.tsx';
-import ShareButton from './components/ShareButton.tsx';
-import { QuizCategory, Language } from './types.ts';
-import { TRANSLATIONS } from './constants.tsx';
+import Header from './components/Header';
+import QuizProfessor from './components/QuizProfessor';
+import ShareButton from './components/ShareButton';
+import { QuizCategory, Language } from './types';
+import { TRANSLATIONS } from './constants';
 
 const App: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<QuizCategory | null>(null);
