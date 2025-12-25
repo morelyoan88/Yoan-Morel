@@ -16,6 +16,8 @@
         h1, h2, h3 {
             font-family: 'Playfair Display', serif;
         }
+        /* Prevenir flashes de contenido no estilizado */
+        [v-cloak] { display: none; }
     </style>
 <script type="importmap">
 {
@@ -27,8 +29,18 @@
   }
 }
 </script>
+<script>
+    // Parche para evitar errores de 'process is not defined' en producción
+    window.process = {
+        env: {
+            API_KEY: "" // Netlify o el entorno inyectarán esto si está configurado, o se usará la del sistema.
+        }
+    };
+</script>
 </head>
 <body class="bg-slate-50 text-slate-900">
     <div id="root"></div>
+    <!-- Punto de entrada principal de la aplicación -->
+    <script type="module" src="./index.tsx"></script>
 </body>
 </html>
