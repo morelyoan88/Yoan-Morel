@@ -14,26 +14,25 @@ export const generateQuestion = async (category: QuizCategory, lang: Language = 
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: `You are Professor Chipoco, the most demanding Senior Manager at CVI.CHE 105 Academy. 
-      Session ID: ${entropy}
-      Context Data (The Manual): ${dataContext}
+      contents: `Eres el Profesor Chipoco, el Senior Manager más exigente de la Academia CVI.CHE 105. 
+      ID de Sesión Académica: ${entropy}
+      Contenido del Manual: ${dataContext}
       
-      TASK: Ask ONE specific, technical, and challenging question based on the manual. 
-      STYLE: Professional, authoritative, academic. You are testing a student who must reach excellence.
-      LANGUAGE: Respond exclusively in ${lang === 'ES' ? 'Spanish' : 'English'}.
+      TAREA: Formula UNA pregunta técnica, específica y desafiante sobre el manual. 
+      ESTILO: Profesional, autoritario, académico. No aceptes respuestas mediocres.
+      IDIOMA: Responde exclusivamente en ${lang === 'ES' ? 'Español' : 'Inglés'}.
       
-      CRITICAL: Don't be predictable. Probe deep into the "${randomSectionHint}" or other complex details. 
-      Start with a brief academic greeting if it's the first question, emphasizing that "Excellence is in the details".`,
+      IMPORTANTE: Enfócate en detalles técnicos como ingredientes específicos o métodos de preparación de la sección "${randomSectionHint}". 
+      Inicia con un saludo formal si es la primera pregunta.`,
       config: { 
         temperature: 0.8,
-        topP: 0.95,
-        thinkingConfig: { thinkingBudget: 0 }
+        topP: 0.95
       },
     });
 
-    return response.text || "Error generating question.";
+    return response.text || "Error al generar la pregunta.";
   } catch (error) {
-    console.error("Gemini API Error (Generate Question):", error);
+    console.error("Error en Gemini API (Generar Pregunta):", error);
     throw error;
   }
 };
@@ -45,20 +44,20 @@ export const evaluateAnswer = async (category: QuizCategory, question: string, u
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-preview',
-      contents: `Professor's Question: "${question}"
-      Student's Answer: "${userAnswer}"
-      Manual Reference: ${dataContext}
+      contents: `Pregunta del Profesor: "${question}"
+      Respuesta del Estudiante: "${userAnswer}"
+      Referencia del Manual: ${dataContext}
       
-      TASK: Evaluate the answer with academic rigor. 
-      LANGUAGE: Feedback must be in ${lang === 'ES' ? 'Spanish' : 'English'}.
+      TAREA: Evalúa con rigor académico. Un error en un ingrediente es una respuesta incorrecta.
+      IDIOMA: El feedback debe estar en ${lang === 'ES' ? 'Español' : 'Inglés'}.
       
-      JSON SCHEMA REQUIREMENT:
-      - isCorrect: true only if they got the core ingredients/details right.
-      - feedback: A professor-style critique (encouraging if correct, strict if wrong).
-      - productName: The specific item discussed (e.g., "Lomo Saltado").
-      - correctAnswer: The exact information from the manual if they missed it.`,
+      ESTRUCTURA JSON:
+      - isCorrect: true solo si la respuesta es precisa según el manual.
+      - feedback: Crítica del profesor (felicita la excelencia o señala la falta de estudio).
+      - productName: Nombre exacto del plato o bebida discutida.
+      - correctAnswer: La información exacta que el manual dicta.`,
       config: {
-        thinkingConfig: { thinkingBudget: 5000 },
+        thinkingConfig: { thinkingBudget: 4000 },
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
@@ -73,9 +72,9 @@ export const evaluateAnswer = async (category: QuizCategory, question: string, u
       }
     });
 
-    return JSON.parse(response.text || '{"isCorrect": false, "feedback": "Error parsing response", "productName": "", "correctAnswer": ""}');
+    return JSON.parse(response.text || '{"isCorrect": false, "feedback": "Error de procesamiento", "productName": "", "correctAnswer": ""}');
   } catch (error) {
-    console.error("Gemini API Error (Evaluate Answer):", error);
+    console.error("Error en Gemini API (Evaluar Respuesta):", error);
     throw error;
   }
 };
@@ -99,8 +98,8 @@ export const getProductImage = async (productName: string): Promise<{ url: strin
       contents: {
         parts: [
           {
-            text: `High-end professional food photography of "${productName}" from the CVI.CHE 105 menu. 
-            Peruvian gourmet presentation, bright studio lighting, white ceramic plate, restaurant setting, 4k.`,
+            text: `Professional food photography of "${productName}" for CVI.CHE 105 restaurant. 
+            Gourmet Peruvian plating, high-end restaurant lighting, white plate, minimalist background, 4k.`,
           },
         ],
       },
@@ -117,7 +116,7 @@ export const getProductImage = async (productName: string): Promise<{ url: strin
       }
     }
   } catch (error) {
-    console.error("Error generating image:", error);
+    console.error("Error al generar imagen:", error);
   }
 
   return null;
